@@ -4,9 +4,10 @@
 
 ```bash
 curl -s https://warranty.bot2botlabs.com/mcp -H 'content-type: application/json' \
-  -H 'Authorization: Bearer wdk_…' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"check_warranty","arguments":{"brand":"Apple","product":"iPhone 15","purchase_date":"2026-01-10"}}}'
 ```
+
+No key needed for that call: the free tier allows 20 keyless tool calls per day per IP.
 
 US brand and manufacturer warranty lookup by Bot2Bot Labs. It returns the term only when the brand's page states it, plus exclusions, where to claim, and a public receipt.
 
@@ -15,19 +16,22 @@ US brand and manufacturer warranty lookup by Bot2Bot Labs. It returns the term o
 - Skills: `check-warranty`, `verify-warranty-receipt`
 - Brands (v0, US): Apple, Samsung, Sony, Google, Microsoft, Dell, HP, Nike
 
-## API key
+## API key and cost
 
-`initialize` and `tools/list` work without a key. **Tool calls need a free `wdk_` key** from https://warranty.bot2botlabs.com/onboard, sent as `Authorization: Bearer wdk_…`. This package doesn't store a key; add the header in your client's MCP settings.
+**Free tier, no key:** up to 20 tool calls per day per IP (resets 00:00 UTC). Keyless calls are never billed. A keyless lookup belongs to no account, so only its public receipt can be read back. Each keyless response includes a `free_tier` object with `used`, `remaining` and `resets_at`. Past the cap, the server returns JSON-RPC error `-32029` with a link to the free-key page.
 
-Try it first with the shared demo key on https://warranty.bot2botlabs.com/docs/demo (never billed). Terms: https://warranty.bot2botlabs.com/terms · Privacy: https://warranty.bot2botlabs.com/privacy
+**More than 20 a day:** get a free `wdk_` key (no card) from https://warranty.bot2botlabs.com/onboard and send `Authorization: Bearer wdk_…`. Only keys issued there are accepted. This package stores no key; add the header in your client's MCP settings. The shared demo key on https://warranty.bot2botlabs.com/docs/demo also works and is never billed.
+
+Terms: https://warranty.bot2botlabs.com/terms · Privacy: https://warranty.bot2botlabs.com/privacy
 
 ## Prove it
 
 ```bash
-WARRANTY_DESK_API_KEY=<your key> node scripts/prove.mjs
+node scripts/prove.mjs                                # keyless free tier
+WARRANTY_DESK_API_KEY=<your key> node scripts/prove.mjs   # or with your key
 ```
 
-Node 22+, no dependencies. The script lists the tools, shows that an unkeyed call is refused, and then runs one call per skill. The key is never printed.
+Node 22+, no dependencies. The script lists the tools and runs one call per skill, keyless unless `WARRANTY_DESK_API_KEY` is set. The key is never printed.
 
 Docs: https://warranty.bot2botlabs.com/llms.txt · demo receipts: https://warranty.bot2botlabs.com/docs/demo
 

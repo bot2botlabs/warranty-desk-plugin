@@ -1,7 +1,8 @@
 // Zero-dep proof harness (Node 22+). Reads this plugin's mcp.json, speaks
 // Streamable HTTP JSON-RPC to the configured server, lists tools, and runs one
-// core call per skill. Tool calls on this server need an API key: pass your own
-// free key (from https://warranty.bot2botlabs.com/onboard) in the WARRANTY_DESK_API_KEY environment variable. The key is
+// core call per skill. With no key the calls use the keyless free tier (20 tool
+// calls per day per IP). To use your own free key (from
+// https://warranty.bot2botlabs.com/onboard), set WARRANTY_DESK_API_KEY. The key is
 // sent only as a request header and is never printed or written to disk.
 import { readFileSync } from "node:fs";
 const cfg = JSON.parse(readFileSync(new URL("../mcp.json", import.meta.url)));
@@ -29,10 +30,7 @@ const init = await rpc("initialize", { protocolVersion: "2025-06-18", capabiliti
 steps.push({ step: "initialize (no key)", http: init.status, pass: init.status === 200 && !!init.body.result, server: init.body.result?.serverInfo, protocol: init.body.result?.protocolVersion });
 const tl = await rpc("tools/list", {}, false);
 steps.push({ step: "tools/list (no key)", http: tl.status, pass: !!tl.body.result?.tools, tools: tl.body.result?.tools?.map(t => t.name) });
-const unkeyed = await rpc("tools/call", { name: "check_warranty", arguments: { brand: "Apple" } }, false);
-steps.push({ step: "tools/call without key (expected to fail)", http: unkeyed.status, result: payloadOf(unkeyed) });
-if (!key) { console.error("Set WARRANTY_DESK_API_KEY to run keyed tool calls."); }
-else {
+{
   const ctx = {};
   for (const [skill, tool, argsFn, pick] of [
   ["check-warranty", "check_warranty", () => ({ brand: "Apple", product: "iPhone 15", category: "phone", purchase_date: "2026-01-10", as_of: "2026-11-02" }), (p, c) => { c.rid = p?.receipt?.id ?? p?.receipt?.receipt_id ?? (p?.receipt?.public_url || "").split("/r/")[1]; }],
@@ -44,7 +42,7 @@ else {
     const payload = payloadOf(r);
     const pass = r.status === 200 && !r.body.error && !r.body.result?.isError;
     if (pass && pick) pick(payload, ctx);
-    steps.push({ step: `${skill}: ${tool}`, args, http: r.status, pass, payload });
+    steps.push({ step: `${skill}: ${tool}${key ? "" : " (keyless)"}`, args, http: r.status, pass, payload });
   }
 }
 console.log(JSON.stringify({ url, ran_at: new Date().toISOString(), key_used: key ? "set (value not recorded)" : "none", steps }, null, 2));

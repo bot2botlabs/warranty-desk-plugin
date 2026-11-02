@@ -29,4 +29,4 @@ Tool: `check_warranty` on the `warranty-desk` MCP server.
 
 - v0 covers US brands Apple, Samsung, Sony, Google, Microsoft, Dell, HP, and Nike (`GET https://warranty.bot2botlabs.com/api/v1/brands`).
 - Store return windows are a different tool (Deadline Desk). "Likely covered" is not a promise that a claim will be approved.
-- Tool calls need a free `wdk_` API key from https://warranty.bot2botlabs.com/onboard. Each lookup mints a public receipt, so never put names, emails, or serial numbers in `product`.
+- No key needed: the free tier allows 20 tool calls per day per IP. For more, get a free `wdk_` key (no card) from https://warranty.bot2botlabs.com/onboard. Past the cap the server returns error `-32029` with that link. Each lookup mints a public receipt, so never put names, emails, or serial numbers in `product`.
