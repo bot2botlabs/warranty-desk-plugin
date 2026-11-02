@@ -19,6 +19,8 @@ US brand and manufacturer warranty lookup by Bot2Bot Labs. It returns the term o
 
 `initialize` and `tools/list` work without a key. **Tool calls need a free `wdk_` key** from https://warranty.bot2botlabs.com/onboard, sent as `Authorization: Bearer wdk_…`. This package doesn't store a key; add the header in your client's MCP settings.
 
+Try it first with the shared demo key on https://warranty.bot2botlabs.com/docs/demo (never billed). Terms: https://warranty.bot2botlabs.com/terms · Privacy: https://warranty.bot2botlabs.com/privacy
+
 ## Prove it
 
 ```bash
