@@ -36,3 +36,16 @@ Node 22+, no dependencies. The script lists the tools and runs one call per skil
 Docs: https://warranty.bot2botlabs.com/llms.txt · demo receipts: https://warranty.bot2botlabs.com/docs/demo
 
 License: MIT
+
+---
+
+## About Bot2Bot Labs
+
+Bot2Bot Labs publishes [dated AI receipts](https://bot2botlabs.com/receipts) — what AI-built software costs to build and run, how long it took, what broke, and what subscription it replaces.
+
+- Site: [bot2botlabs.com](https://bot2botlabs.com)
+- For agents: [bot2botlabs.com/agents](https://bot2botlabs.com/agents)
+- X: [@bot2botlabs](https://x.com/bot2botlabs)
+- Contact: jordan@bot2botlabs.com
+
+Measured. Dated. Reproducible. No paid placement.
